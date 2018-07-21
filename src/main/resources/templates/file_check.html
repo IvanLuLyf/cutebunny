@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{component :: page_header}">
+
+</head>
+<body>
+<div th:replace="~{component :: page_title}"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">可信数字资产存证</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">文件验证</li>
+                </ol>
+            </nav>
+            <div class="card">
+                <div class="card-body">
+                    <button class="btn btn-primary" onclick="selectFile()">选择文件</button>
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <input style="height:0px;width:0px;" id="file" type="file" name="file"/>
+                    </form>
+                    <div id="infoTable" class="mt-2">
+                        <ul class="list-group">
+                            <li class="list-group-item">文件哈希 :<a id="u_hash"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="loadingModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="loadingModalLabel">上传中...</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            请不要关闭窗口,耐心等待
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-dark" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var uploading = false;
+
+    function selectFile() {
+        $("#file").click();
+    }
+
+    $("#file").on("change", function () {
+        if (uploading) {
+            alert("文件正在上传中，请稍候");
+            return false;
+        }
+        $('#loadingModal').modal('show')
+        $.ajax({
+            url: "/file/check",
+            type: 'POST',
+            cache: false,
+            data: new FormData($('#uploadForm')[0]),
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                uploading = true;
+            },
+            success: function (data) {
+                console.log(data)
+                $('#loadingModal').modal('hide')
+                $("#u_hash").text(data)
+                uploading = false;
+            }
+        });
+    });
+</script>
+</body>
+</html>

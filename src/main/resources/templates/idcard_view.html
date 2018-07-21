@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{component :: page_header}">
+
+</head>
+<body>
+<div th:replace="~{component :: page_title}"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">可信数字资产存证</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">我的身份证</li>
+                </ol>
+            </nav>
+            <div class="card">
+                <div class="card-body">
+                    <div id="infoTable" class="mt-2" th:if="${hasIdCard==true}">
+                        <ul class="list-group">
+                            <li class="list-group-item">姓名 :<a th:text="${idcard.name}"></a></li>
+                            <li class="list-group-item">身份证号 :<a th:text="${idcard.id}"></a></li>
+                            <li class="list-group-item">性别 :<a th:text="${idcard.sex}"></a></li>
+                            <li class="list-group-item">民族 :<a th:text="${idcard.nation}"></a></li>
+                            <li class="list-group-item">住址 :<a th:text="${idcard.address}"></a></li>
+                            <li class="list-group-item">文件哈希 :<a th:text="${idcard.hash}"></a></li>
+                        </ul>
+                    </div>
+                    <p th:if="${hasIdCard==false}">您未上传过身份证</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

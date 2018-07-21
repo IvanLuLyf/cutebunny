@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="page_header">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/common.css">
+    <title th:text="${title!=null?title:'Title'}"></title>
+</head>
+<body>
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top" th:fragment="page_title">
+    <a class="navbar-brand" href="/index">可信数字资产存证系统</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/index">首页</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/pay">账户</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navFile" data-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false">
+                    文件
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navFile">
+                    <a class="dropdown-item" href="/file/list">文件列表</a>
+                    <a class="dropdown-item" href="/file/upload">文件上传</a>
+                    <a class="dropdown-item" href="/file/check">文件验证</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navIdCard" data-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false">
+                    身份证
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navIdCard">
+                    <a class="dropdown-item" href="/idcard/view">我的身份证</a>
+                    <a class="dropdown-item" href="/idcard/check">身份证校验</a>
+                    <a class="dropdown-item" href="/idcard/upload">身份证上传</a>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav" th:if="${username!=null}">
+            <li class="nav-item">
+                <a class="nav-link" href="/user/account" th:text="${username}"></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/logout">退出</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav" th:if="${username==null}">
+            <li class="nav-item">
+                <a class="nav-link" href="/user/login">登录</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/register">注册</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{component :: page_header}">
+
+</head>
+<body>
+<div th:replace="~{component :: page_title}"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">可信数字资产存证</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">文件列表</li>
+                </ol>
+            </nav>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped table-responsive" style="white-space:nowrap;">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">文件名</th>
+                            <th scope="col">文件哈希</th>
+                            <th scope="col">详情</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="file,status:${files}">
+                            <th scope="row" th:text="${status.index+1}"></th>
+                            <td th:text="${file.filename}"></td>
+                            <td th:text="${file.filehash}"></td>
+                            <td>
+                                <a class="btn btn-primary" th:href="${'https://ipfs.infura.io/ipfs/'+file.filehash}" role="button">下载</a>
+                                <a class="btn btn-outline-primary" th:href="${'/file/compare/'+file.id}" role="button">比较文件</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

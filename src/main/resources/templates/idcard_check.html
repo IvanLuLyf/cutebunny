@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{component :: page_header}">
+
+</head>
+<body>
+<div th:replace="~{component :: page_title}"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">可信数字资产存证</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">身份证验证</li>
+                </ol>
+            </nav>
+            <div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="loadingModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="loadingModalLabel">上传中...</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            请不要关闭窗口,耐心等待
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-dark" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <button class="btn btn-primary" onclick="selectFile()">选择文件</button>
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <input style="height:0px;width:0px;" id="file" type="file" name="file"/>
+                    </form>
+                    <div id="resultCard" class="mt-2">
+                        <ul class="list-group">
+                            <li class="list-group-item">校验结果 :<a id="u_result"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="compareCard" class="row mt-2">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header">
+                            存储在区块链中的信息
+                        </div>
+                        <div class="card-body">
+                            <div class="mt-2">
+                                <ul class="list-group">
+                                    <li class="list-group-item"><img src="/img/idcard.png" id="expect_img" class="img-fluid"></li>
+                                    <li class="list-group-item">姓名 :<a id="expect_name"></a></li>
+                                    <li class="list-group-item">身份证号 :<a id="expect_id"></a></li>
+                                    <li class="list-group-item">性别 :<a id="expect_sex"></a></li>
+                                    <li class="list-group-item">民族 :<a id="expect_nation"></a></li>
+                                    <li class="list-group-item">住址 :<a id="expect_address"></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header">
+                            上传身份证的信息
+                        </div>
+                        <div class="card-body">
+                            <div class="mt-2">
+                                <ul class="list-group">
+                                    <li class="list-group-item"><img src="/img/idcard.png" id="actual_img" class="img-fluid"></li>
+                                    <li class="list-group-item">姓名 :<a id="actual_name"></a></li>
+                                    <li class="list-group-item">身份证号 :<a id="actual_id"></a></li>
+                                    <li class="list-group-item">性别 :<a id="actual_sex"></a></li>
+                                    <li class="list-group-item">民族 :<a id="actual_nation"></a></li>
+                                    <li class="list-group-item">住址 :<a id="actual_address"></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var uploading = false;
+
+    function selectFile() {
+        $("#file").click();
+    }
+
+    $("#file").on("change", function () {
+        if (uploading) {
+            alert("文件正在上传中，请稍候");
+            return false;
+        }
+        $('#loadingModal').modal('show')
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+            $("#actual_img").attr("src",evt.target.result);
+        }
+        reader.readAsDataURL(document.getElementById("file").files[0]);
+        $.ajax({
+            url: "/idcard/check",
+            type: 'POST',
+            cache: false,
+            data: new FormData($('#uploadForm')[0]),
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                uploading = true;
+            },
+            success: function (data) {
+                console.log(data)
+                $('#loadingModal').modal('hide')
+                $("#u_result").text(data.message)
+                if (data.message == null) {
+                    $("#compareCard").show();
+                    $("#expect_name").text(data.expect.name)
+                    $("#expect_id").text(data.expect.id)
+                    $("#expect_sex").text(data.expect.sex)
+                    $("#expect_nation").text(data.expect.nation)
+                    $("#expect_address").text(data.expect.address)
+                    $("#expect_img").attr("src","https://ipfs.infura.io/ipfs/" + data.expect.hash);
+
+                    $("#actual_name").text(data.actual.name)
+                    $("#actual_id").text(data.actual.id)
+                    $("#actual_sex").text(data.actual.sex)
+                    $("#actual_nation").text(data.actual.nation)
+                    $("#actual_address").text(data.actual.address)
+                    var flag = false;
+
+                    if (data.expect.name != data.actual.name) {
+                        flag = true;
+                        $("#actual_name").css({color: "red"})
+                    }else{
+                        $("#actual_name").css({color: "green"})
+                    }
+
+                    if (data.expect.id != data.actual.id) {
+                        flag = true;
+                        $("#actual_id").css({color: "red"})
+                    }else{
+                        $("#actual_id").css({color: "green"})
+                    }
+
+                    if (data.expect.sex != data.actual.sex) {
+                        flag = true;
+                        $("#actual_sex").css({color: "red"})
+                    }else{
+                        $("#actual_sex").css({color: "green"})
+                    }
+
+                    if (data.expect.nation != data.actual.nation) {
+                        flag = true;
+                        $("#actual_nation").css({color: "red"})
+                    }else{
+                        $("#actual_nation").css({color: "green"})
+                    }
+
+                    if (data.expect.address != data.actual.address) {
+                        flag = true;
+                        $("#actual_address").css({color: "red"})
+                    }else{
+                        $("#actual_address").css({color: "green"})
+                    }
+
+                    if(flag){
+                        $("#u_result").text("有信息篡改")
+                    }else{
+                        $("#u_result").text("信息未篡改")
+                    }
+                } else {
+                    $("#compareCard").hide();
+                }
+                uploading = false;
+            }
+        });
+    });
+</script>
+</body>
+</html>

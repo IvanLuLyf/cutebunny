@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{component :: page_header}">
+
+</head>
+<body>
+<div th:replace="~{component :: page_title}"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">可信数字资产存证</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">我的账户</li>
+                </ol>
+            </nav>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${message}"></h5>
+                    <a href="/pay">返回我的账户</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
