@@ -2,10 +2,7 @@ package com.twimi.cutebunny.Controller;
 
 import com.twimi.cutebunny.Model.IdCardModel;
 import com.twimi.cutebunny.Model.ResultModel;
-import com.twimi.cutebunny.Util.BaiduUtil;
-import com.twimi.cutebunny.Util.BlockChainUtil;
-import com.twimi.cutebunny.Util.CodeUtil;
-import com.twimi.cutebunny.Util.IPFSUtil;
+import com.twimi.cutebunny.Util.*;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,7 +23,7 @@ public class IdCardController {
         if (username != null) {
             modelMap.addAttribute("username", username);
             try {
-                String data = BlockChainUtil.getContract(username).getData("id_card").send();
+                String data = BlockChainUtil.getContract(username).getData("id_card_info").send();
                 if ("null".equals(data)) {
                     modelMap.addAttribute("hasIdCard", false);
                 } else {
@@ -67,7 +64,7 @@ public class IdCardController {
             try {
                 IdCardModel actual = BaiduUtil.processIdcard(file.getBytes());
                 if (actual != null) {
-                    String data = BlockChainUtil.getContract(username).queryData("idcard_" + actual.getId()).send();
+                    String data = BlockChainUtil.getContract(username).queryData("id_card_" + StringUtil.md5(actual.getId())).send();
                     if ("null".equals(data)) {
                         return new ResultModel("系统未存储当前身份证");
                     } else {
@@ -113,7 +110,7 @@ public class IdCardController {
                     String data = CodeUtil.encode(model.toJSON(), "CuteBunny");
                     TransactionReceipt receipt = BlockChainUtil
                             .getContract(username)
-                            .saveData("idcard_" + model.getId(), "id_card", data)
+                            .saveData("id_card_" + StringUtil.md5(model.getId()), "id_card_info", data)
                             .send();
                     model.setBlockHash(receipt.getTransactionHash());
                 }
