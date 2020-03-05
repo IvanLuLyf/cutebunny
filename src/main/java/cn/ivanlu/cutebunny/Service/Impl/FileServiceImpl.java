@@ -3,7 +3,6 @@ package cn.ivanlu.cutebunny.Service.Impl;
 import cn.ivanlu.cutebunny.Dao.FileDao;
 import cn.ivanlu.cutebunny.Model.FileModel;
 import cn.ivanlu.cutebunny.Service.FileService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +10,11 @@ import java.util.List;
 @Service
 public class FileServiceImpl implements FileService {
 
-    @Autowired
-    private FileDao fileDao;
+    private final FileDao fileDao;
+
+    public FileServiceImpl(FileDao fileDao) {
+        this.fileDao = fileDao;
+    }
 
     @Override
     public List<FileModel> getFilesByUsername(String username) {

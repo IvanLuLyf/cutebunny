@@ -4,7 +4,6 @@ import cn.ivanlu.cutebunny.Model.FileModel;
 import cn.ivanlu.cutebunny.Service.FileService;
 import cn.ivanlu.cutebunny.Util.BlockChainUtil;
 import cn.ivanlu.cutebunny.Util.IPFSUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +16,11 @@ import java.util.List;
 @Controller
 public class FileController {
 
-    @Autowired
-    FileService fileService;
+    private final FileService fileService;
+
+    public FileController(FileService fileService) {
+        this.fileService = fileService;
+    }
 
     @RequestMapping(path = "/file/check", method = RequestMethod.GET)
     public String check(HttpSession session, ModelMap modelMap) {

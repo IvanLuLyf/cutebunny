@@ -3,7 +3,6 @@ package cn.ivanlu.cutebunny.Controller;
 import cn.ivanlu.cutebunny.Service.UserService;
 import cn.ivanlu.cutebunny.Util.BlockChainUtil;
 import cn.ivanlu.cutebunny.Util.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +16,11 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @RequestMapping(path = "/user/account", method = RequestMethod.GET)
     public String account(HttpSession session, ModelMap modelMap) {

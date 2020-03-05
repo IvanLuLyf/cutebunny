@@ -25,14 +25,14 @@ public class BlockChainUtil {
     private static Web3j web3j = null;
     private static final BigDecimal TEN18 = new BigDecimal("1000000000000000000");
 
-    public static Map<String, Credentials> getCredentialsMap() {
+    private static Map<String, Credentials> getCredentialsMap() {
         if (credentialsMap == null) {
             credentialsMap = new HashMap<>();
         }
         return credentialsMap;
     }
 
-    public static Credentials getSiteCredentials() {
+    private static Credentials getSiteCredentials() {
         if (siteCredentials == null) {
             try {
                 siteCredentials = WalletUtils.loadCredentials("cutebunny", "site.json");
@@ -46,8 +46,12 @@ public class BlockChainUtil {
 
     public static boolean payTo(String address) {
         try {
-            TransactionReceipt pay = Transfer.sendFunds(getWeb3j(), getSiteCredentials(), address, new BigDecimal("0.1"), Convert.Unit.ETHER).send();
-            return true;
+            Credentials credentials = getSiteCredentials();
+            if (credentials != null) {
+                TransactionReceipt pay = Transfer.sendFunds(getWeb3j(), credentials, address, new BigDecimal("0.1"), Convert.Unit.ETHER).send();
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -58,7 +62,7 @@ public class BlockChainUtil {
         try {
             EthGetBalance ethGetBalance = getWeb3j().ethGetBalance(address, DefaultBlockParameterName.LATEST).send();
             BigDecimal wei = new BigDecimal(ethGetBalance.getBalance());
-            BigDecimal balance = wei.divide(TEN18);
+            BigDecimal balance = wei.divide(TEN18, 10, BigDecimal.ROUND_UP);
             return balance.toString();
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,9 +70,9 @@ public class BlockChainUtil {
         }
     }
 
-    public static Web3j getWeb3j() {
+    private static Web3j getWeb3j() {
         if (web3j == null) {
-            web3j = Web3j.build(new HttpService("https://rinkeby.infura.io/6VprDJki6kyAXvhBzHee"));
+            web3j = Web3j.build(new HttpService("https://rinkeby.infura.io/v3/47788e47975644b49657a044ad9c5a8a"));
         }
         return web3j;
     }

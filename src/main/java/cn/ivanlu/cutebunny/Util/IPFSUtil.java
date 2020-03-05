@@ -10,7 +10,7 @@ import java.util.List;
 public class IPFSUtil {
     private static IPFS ipfs;
 
-    public static IPFS getIpfs() {
+    private static IPFS getIpfs() {
         if (ipfs == null) {
             ipfs = new IPFS("ipfs.infura.io", 5001, true);
         }

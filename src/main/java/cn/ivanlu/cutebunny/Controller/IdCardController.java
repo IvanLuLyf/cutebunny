@@ -62,7 +62,7 @@ public class IdCardController {
         String username = (String) session.getAttribute("username");
         if (username != null) {
             try {
-                IdCardModel actual = BaiduUtil.processIdcard(file.getBytes());
+                IdCardModel actual = BaiduUtil.processIdCard(file.getBytes());
                 if (actual != null) {
                     String data = BlockChainUtil.getContract(username).queryData("id_card_" + StringUtil.md5(actual.getId())).send();
                     if ("null".equals(data)) {
@@ -103,7 +103,7 @@ public class IdCardController {
         String username = (String) session.getAttribute("username");
         if (username != null) {
             try {
-                IdCardModel model = BaiduUtil.processIdcard(file.getBytes());
+                IdCardModel model = BaiduUtil.processIdCard(file.getBytes());
                 String hash = IPFSUtil.uploadFile(file.getBytes());
                 if (model != null) {
                     model.setHash(hash);

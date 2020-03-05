@@ -131,8 +131,8 @@ public class FileUploadContract extends Contract {
     /**
      * Query data in BlockChain by primary key
      *
-     * @param primary
-     * @return
+     * @param primary the primary Key
+     * @return the query result
      */
     public RemoteCall<String> queryData(String primary) {
         Function function = new Function(

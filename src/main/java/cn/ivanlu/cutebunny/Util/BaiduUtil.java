@@ -13,15 +13,15 @@ public class BaiduUtil {
 
     private static AipOcr client = null;
 
-    public static AipOcr getClient() {
+    private static AipOcr getClient() {
         if (client == null) {
             client = new AipOcr(APP_ID, API_KEY, SECRET_KEY);
         }
         return client;
     }
 
-    public static IdCardModel processIdcard(byte[] img) {
-        HashMap<String, String> options = new HashMap<String, String>();
+    public static IdCardModel processIdCard(byte[] img) {
+        HashMap<String, String> options = new HashMap<>();
         options.put("detect_direction", "true");
         options.put("detect_risk", "false");
         try {
